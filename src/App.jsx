@@ -149,6 +149,7 @@ function App() {
           mesh.name = shape.nameId;
 
           mesh.material.color = new THREE.Color(shape.color);
+          mesh.material.wireframe = shape.wireframe;
 
           scene.add(mesh);
         });
@@ -175,6 +176,54 @@ function App() {
     }
   }, [displayedShapes]);
 
+  const setPositionsToLocalStorage = ({ targetProperty, targetValue }) => {
+    setShapes((prevState) => {
+      return prevState.map((object) => {
+        if (object.nameId === selectedObject.name) {
+          return {
+            ...object,
+            position: {
+              ...object.position,
+              [targetProperty]: targetValue,
+            },
+          };
+        }
+        return object;
+      });
+    });
+  };
+
+  const setScalesToLocalStorage = ({ targetProperty, targetValue }) => {
+    setShapes((prevState) => {
+      return prevState.map((object) => {
+        if (object.nameId === selectedObject.name) {
+          return {
+            ...object,
+            scale: {
+              ...object.scale,
+              [targetProperty]: targetValue,
+            },
+          };
+        }
+        return object;
+      });
+    });
+  };
+
+  const setPropertToLocalStorage = ({ targetProperty, targetValue }) => {
+    setShapes((prevState) => {
+      return prevState.map((object) => {
+        if (object.nameId === selectedObject.name) {
+          return {
+            ...object,
+            [targetProperty]: targetValue,
+          };
+        }
+        return object;
+      });
+    });
+  };
+
   useEffect(() => {
     if (selectedObject) {
       if (guiRef.current) {
@@ -191,38 +240,75 @@ function App() {
         .min(-10)
         .max(10)
         .step(0.1)
-        .onFinishChange((value) => {
-          setShapes((prevState) => {
-            return prevState.map((object) => {
-              console.log(object, selectedObject);
-              if (object.nameId === selectedObject.name) {
-                return {
-                  ...object,
-                  position: {
-                    ...object.position,
-                    x: value,
-                  },
-                };
-              }
-              return object;
-            });
-          });
-        });
+        .onFinishChange((value) =>
+          setPositionsToLocalStorage({
+            targetProperty: "x",
+            targetValue: value,
+          })
+        );
       positionFolder
         .add(selectedObject.position, "y")
         .min(-10)
         .max(10)
-        .step(0.1);
+        .step(0.1)
+        .onFinishChange((value) =>
+          setPositionsToLocalStorage({
+            targetProperty: "y",
+            targetValue: value,
+          })
+        );
       positionFolder
         .add(selectedObject.position, "z")
         .min(-10)
         .max(10)
-        .step(0.1);
-      scaleFolder.add(selectedObject.scale, "x").min(-10).max(10).step(0.1);
-      scaleFolder.add(selectedObject.scale, "y").min(-10).max(10).step(0.1);
-      scaleFolder.add(selectedObject.scale, "z").min(-10).max(10).step(0.1);
-      materialFolder.addColor(selectedObject.material, "color");
-      materialFolder.add(selectedObject.material, "wireframe");
+        .step(0.1)
+        .onFinishChange((value) =>
+          setPositionsToLocalStorage({
+            targetProperty: "z",
+            targetValue: value,
+          })
+        );
+      scaleFolder
+        .add(selectedObject.scale, "x")
+        .min(-10)
+        .max(10)
+        .step(0.1)
+        .onFinishChange((value) =>
+          setScalesToLocalStorage({ targetProperty: "x", targetValue: value })
+        );
+      scaleFolder
+        .add(selectedObject.scale, "y")
+        .min(-10)
+        .max(10)
+        .step(0.1)
+        .onFinishChange((value) =>
+          setScalesToLocalStorage({ targetProperty: "y", targetValue: value })
+        );
+      scaleFolder
+        .add(selectedObject.scale, "z")
+        .min(-10)
+        .max(10)
+        .step(0.1)
+        .onFinishChange((value) =>
+          setScalesToLocalStorage({ targetProperty: "z", targetValue: value })
+        );
+
+      materialFolder
+        .addColor(selectedObject.material, "color")
+        .onFinishChange((value) => {
+          setPropertToLocalStorage({
+            targetProperty: "color",
+            targetValue: value,
+          });
+        });
+      materialFolder
+        .add(selectedObject.material, "wireframe")
+        .onFinishChange((value) => {
+          setPropertToLocalStorage({
+            targetProperty: "wireframe",
+            targetValue: value,
+          });
+        });
 
       guiRef.current = gui;
     }
