@@ -12,24 +12,36 @@ import GUI from "lil-gui";
 
 function App() {
   const canvasRef = useRef(null);
-  const [shapes, setShapes] = useLocalStorage("shapes", []);
   const guiRef = useRef(null);
+  const [shapes = [], setShapes] = useLocalStorage("shapes", []);
 
   const [displayedShapes, setDisplayedShapes] = useState([]);
   const [showDialog, setShowDialog] = useState(false);
   const [selectedObject, setSelectedObject] = useState(null);
 
   const handleShapeDelete = (id) => {
-    setShapes((prevState) => prevState.filter((item) => item.id !== id));
+    setShapes((prevState) => prevState.filter((item) => item.nameId !== id));
   };
 
   const handleShapeRender = (id) => {
-    const selectedShape = shapes.filter((item) => item.id === id);
+    const selectedShape = shapes.filter((item) => item.nameId === id);
     setDisplayedShapes(selectedShape);
   };
   const handleCreate = ({ name, shapeType }) => {
-    const newId = shapes.length ? shapes[shapes.length - 1].id + 1 : 1;
-    setShapes([...shapes, { id: newId, name, shapeType }]);
+    const nameId = shapes?.length ? shapes[shapes.length - 1].id + 1 : 1;
+
+    setShapes([
+      ...shapes,
+      {
+        nameId,
+        name,
+        shapeType,
+        color: 0xffffff,
+        wireframe: false,
+        position: { x: 0, y: 0, z: 0 },
+        scale: { x: 1, y: 1, z: 1 },
+      },
+    ]);
   };
 
   const handleRenderAll = () => {
@@ -63,16 +75,15 @@ function App() {
 
       const raycaster = new THREE.Raycaster();
 
-      const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 0.5);
-      light.position.set(0, 1, 0);
-      scene.add(light);
-
-      const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+      const ambientLight = new THREE.AmbientLight(0xffffff, 1);
       scene.add(ambientLight);
 
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-      directionalLight.position.set(5, 5, 5);
+      const directionalLight = new THREE.DirectionalLight(0x00fffc, 1.2);
+      directionalLight.position.set(5, 5, 0);
       scene.add(directionalLight);
+
+      const hemisphereLight = new THREE.HemisphereLight(0xff0000, 0x0000ff, 2);
+      scene.add(hemisphereLight);
 
       const onMouseClick = (event) => {
         const mouse = new THREE.Vector2();
@@ -86,16 +97,18 @@ function App() {
         if (intersects.length > 0) {
           scene.children.forEach((child) => {
             if (child.type === "Mesh") {
-              const color = new THREE.Color(0x00ffff);
+              const color = new THREE.Color(0xffffff);
               child.material.color = color;
             }
           });
 
           const selectedObject = intersects[0].object;
-          const color = new THREE.Color(0xff0000);
+          const color = new THREE.Color(0xff8f8f);
           selectedObject.material.color = color;
 
           setSelectedObject(selectedObject);
+        } else {
+          setSelectedObject(null);
         }
       };
 
@@ -108,10 +121,6 @@ function App() {
       });
 
       const renderScene = () => {
-        while (scene.children.length > 0) {
-          scene.remove(scene.children[0]);
-        }
-
         displayedShapes.forEach((shape, index) => {
           let geometry;
           if (shape.shapeType === "Sphere") {
@@ -124,8 +133,23 @@ function App() {
             geometry = new THREE.ConeGeometry(1, 2, 32);
           }
           const material = new THREE.MeshStandardMaterial();
+          material.roughness = 0.4;
+
+          console.log(displayedShapes);
+
           const mesh = new THREE.Mesh(geometry, material);
-          mesh.position.x = index * 3;
+          mesh.position.x = shape.position.x;
+          mesh.position.y = shape.position.y;
+          mesh.position.z = shape.position.z;
+
+          mesh.scale.x = shape.scale.x;
+          mesh.scale.y = shape.scale.y;
+          mesh.scale.z = shape.scale.z;
+
+          mesh.name = shape.nameId;
+
+          mesh.material.color = new THREE.Color(shape.color);
+
           scene.add(mesh);
         });
 
@@ -166,7 +190,24 @@ function App() {
         .add(selectedObject.position, "x")
         .min(-10)
         .max(10)
-        .step(0.1);
+        .step(0.1)
+        .onFinishChange((value) => {
+          setShapes((prevState) => {
+            return prevState.map((object) => {
+              console.log(object, selectedObject);
+              if (object.nameId === selectedObject.name) {
+                return {
+                  ...object,
+                  position: {
+                    ...object.position,
+                    x: value,
+                  },
+                };
+              }
+              return object;
+            });
+          });
+        });
       positionFolder
         .add(selectedObject.position, "y")
         .min(-10)

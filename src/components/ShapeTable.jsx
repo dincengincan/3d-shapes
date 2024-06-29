@@ -25,17 +25,17 @@ export const ShapeTable = ({ data, onShapeDelete, onShapeRender }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.length > 0 ? (
+          {data?.length > 0 ? (
             data.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>{row.id}</TableCell>
+              <TableRow key={row.nameId}>
+                <TableCell>{row.nameId}</TableCell>
                 <TableCell>{row.name}</TableCell>
                 <TableCell>{row.shapeType}</TableCell>
                 <TableCell>
                   <Button
                     variant="contained"
                     color="error"
-                    onClick={() => onShapeDelete(row.id)}
+                    onClick={() => onShapeDelete(row.nameId)}
                     style={{ marginRight: "10px" }}
                   >
                     Delete
@@ -43,7 +43,7 @@ export const ShapeTable = ({ data, onShapeDelete, onShapeRender }) => {
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => onShapeRender(row.id)}
+                    onClick={() => onShapeRender(row.nameId)}
                   >
                     Render
                   </Button>
