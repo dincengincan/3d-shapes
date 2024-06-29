@@ -86,6 +86,7 @@ function App() {
       scene.add(hemisphereLight);
 
       const onMouseClick = (event) => {
+        event.stopPropagation();
         const mouse = new THREE.Vector2();
 
         mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -94,6 +95,7 @@ function App() {
         raycaster.setFromCamera(mouse, camera);
         const intersects = raycaster.intersectObjects(scene.children, false);
 
+        // handle object click
         if (intersects.length > 0) {
           scene.children.forEach((child) => {
             if (child.type === "Mesh") {
@@ -107,8 +109,19 @@ function App() {
           selectedObject.material.color = color;
 
           setSelectedObject(selectedObject);
-        } else {
-          setSelectedObject(null);
+          return;
+        }
+
+        // handle outside click
+        if (event.target.tagName === "CANVAS") {
+          scene.children.forEach((child) => {
+            if (child.type === "Mesh") {
+              const color = new THREE.Color(0xffffff);
+              child.material.color = color;
+            }
+            setSelectedObject(null);
+            guiRef.current.destroy();
+          });
         }
       };
 
@@ -230,6 +243,8 @@ function App() {
         guiRef.current.destroy();
       }
       const gui = new GUI();
+      gui.domElement.style.position = "absolute";
+      gui.domElement.style.left = "0px";
 
       const positionFolder = gui.addFolder("Position");
       const scaleFolder = gui.addFolder("Scale");
