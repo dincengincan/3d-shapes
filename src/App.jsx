@@ -1,18 +1,23 @@
-import "./App.css";
 import { ShapeTable } from "./components/ShapeTable";
 import { CreateShapeDialog } from "./components/CreateShapeDialog";
-import { Button } from "@mui/material";
+import { Button, Popover, Typography } from "@mui/material";
 import { useState, useEffect, useRef } from "react";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { TransformControls } from "three/examples/jsm/controls/TransformControls";
+import { IconButton } from "@mui/material";
+import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
+import GUI from "lil-gui";
 
 function App() {
   const canvasRef = useRef(null);
-
   const [shapes, setShapes] = useLocalStorage("shapes", []);
-  const [showDialog, setShowDialog] = useState(false);
+  const guiRef = useRef(null);
+
   const [displayedShapes, setDisplayedShapes] = useState([]);
+  const [showDialog, setShowDialog] = useState(false);
+  const [selectedObject, setSelectedObject] = useState(null);
 
   const handleShapeDelete = (id) => {
     setShapes((prevState) => prevState.filter((item) => item.id !== id));
@@ -49,18 +54,58 @@ function App() {
 
       const controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
-      controls.dampingFactor = 0.25;
-      controls.screenSpacePanning = false;
-      controls.maxPolarAngle = Math.PI / 2;
 
-      // const ambientLight = new THREE.AmbientLight(0x404040); // soft white light
-      // ambientLight.intensity = 10;
-      // scene.add(ambientLight);
+      const transformControls = new TransformControls(
+        camera,
+        renderer.domElement
+      );
+      scene.add(transformControls);
 
-      // const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+      const raycaster = new THREE.Raycaster();
 
-      // directionalLight.position.set(1, 1, 1).normalize();
-      // scene.add(directionalLight);
+      const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 0.5);
+      light.position.set(0, 1, 0);
+      scene.add(light);
+
+      const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+      scene.add(ambientLight);
+
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+      directionalLight.position.set(5, 5, 5);
+      scene.add(directionalLight);
+
+      const onMouseClick = (event) => {
+        const mouse = new THREE.Vector2();
+
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(scene.children, false);
+
+        if (intersects.length > 0) {
+          scene.children.forEach((child) => {
+            if (child.type === "Mesh") {
+              const color = new THREE.Color(0x00ffff);
+              child.material.color = color;
+            }
+          });
+
+          const selectedObject = intersects[0].object;
+          const color = new THREE.Color(0xff0000);
+          selectedObject.material.color = color;
+
+          setSelectedObject(selectedObject);
+        }
+      };
+
+      window.addEventListener("mousedown", onMouseClick);
+
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
 
       const renderScene = () => {
         while (scene.children.length > 0) {
@@ -70,7 +115,7 @@ function App() {
         displayedShapes.forEach((shape, index) => {
           let geometry;
           if (shape.shapeType === "Sphere") {
-            geometry = new THREE.SphereGeometry(1, 32, 32);
+            geometry = new THREE.SphereGeometry(1, 16, 16);
           } else if (shape.shapeType === "Cylinder") {
             geometry = new THREE.CylinderGeometry(1, 1, 2, 32);
           } else if (shape.shapeType === "Cube") {
@@ -78,7 +123,7 @@ function App() {
           } else if (shape.shapeType === "Cone") {
             geometry = new THREE.ConeGeometry(1, 2, 32);
           }
-          const material = new THREE.MeshMatcapMaterial({ color: 0x00ffff });
+          const material = new THREE.MeshStandardMaterial();
           const mesh = new THREE.Mesh(geometry, material);
           mesh.position.x = index * 3;
           scene.add(mesh);
@@ -96,12 +141,80 @@ function App() {
       renderScene();
 
       return () => {
-        while (canvasRef.current.firstChild) {
+        while (canvasRef.current && canvasRef.current.firstChild) {
           canvasRef.current.removeChild(canvasRef.current.firstChild);
+        }
+        if (guiRef.current) {
+          guiRef.current.destroy();
         }
       };
     }
   }, [displayedShapes]);
+
+  useEffect(() => {
+    if (selectedObject) {
+      if (guiRef.current) {
+        guiRef.current.destroy();
+      }
+      const gui = new GUI();
+
+      const positionFolder = gui.addFolder("Position");
+      const scaleFolder = gui.addFolder("Scale");
+      const materialFolder = gui.addFolder("Material");
+
+      positionFolder
+        .add(selectedObject.position, "x")
+        .min(-10)
+        .max(10)
+        .step(0.1);
+      positionFolder
+        .add(selectedObject.position, "y")
+        .min(-10)
+        .max(10)
+        .step(0.1);
+      positionFolder
+        .add(selectedObject.position, "z")
+        .min(-10)
+        .max(10)
+        .step(0.1);
+      scaleFolder.add(selectedObject.scale, "x").min(-10).max(10).step(0.1);
+      scaleFolder.add(selectedObject.scale, "y").min(-10).max(10).step(0.1);
+      scaleFolder.add(selectedObject.scale, "z").min(-10).max(10).step(0.1);
+      materialFolder.addColor(selectedObject.material, "color");
+      materialFolder.add(selectedObject.material, "wireframe");
+
+      guiRef.current = gui;
+    }
+  }, [selectedObject]);
+
+  if (displayedShapes.length > 0) {
+    return (
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          height: "100%",
+        }}
+      >
+        <IconButton
+          sx={{
+            position: "absolute",
+            top: 10,
+            right: 10,
+            zIndex: 1,
+          }}
+          color="primary"
+          onClick={() => setDisplayedShapes([])}
+        >
+          <CancelRoundedIcon />
+        </IconButton>
+        <div
+          ref={canvasRef}
+          style={{ width: window.innerWidth, height: window.innerHeight }}
+        />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -109,7 +222,7 @@ function App() {
         variant="contained"
         color="primary"
         onClick={() => setShowDialog(true)}
-        style={{ marginRight: "10px" }}
+        sx={{ marginRight: "10px" }}
       >
         Create
       </Button>
@@ -126,10 +239,6 @@ function App() {
         open={showDialog}
         onClose={() => setShowDialog(false)}
         onCreate={handleCreate}
-      />
-      <div
-        ref={canvasRef}
-        style={{ width: "100%", height: "500px", marginTop: "20px" }}
       />
     </>
   );

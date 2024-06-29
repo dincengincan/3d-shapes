@@ -28,6 +28,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@emotion/react", "virtual:35930d4f0d59d9b77298bd87b8e1542b9738ab9422e38bb973e6f3e67a02cc08dfdd1fc7281b3c0c1b40c6f3ae4662563b52e5c2f2b8711d280e16765cd214f9#npm:11.11.4"],\
           ["@emotion/styled", "virtual:35930d4f0d59d9b77298bd87b8e1542b9738ab9422e38bb973e6f3e67a02cc08dfdd1fc7281b3c0c1b40c6f3ae4662563b52e5c2f2b8711d280e16765cd214f9#npm:11.11.5"],\
+          ["@mui/icons-material", "virtual:35930d4f0d59d9b77298bd87b8e1542b9738ab9422e38bb973e6f3e67a02cc08dfdd1fc7281b3c0c1b40c6f3ae4662563b52e5c2f2b8711d280e16765cd214f9#npm:5.15.21"],\
           ["@mui/material", "virtual:35930d4f0d59d9b77298bd87b8e1542b9738ab9422e38bb973e6f3e67a02cc08dfdd1fc7281b3c0c1b40c6f3ae4662563b52e5c2f2b8711d280e16765cd214f9#npm:5.15.20"],\
           ["@types/react", "npm:18.3.3"],\
           ["@types/react-dom", "npm:18.3.0"],\
@@ -36,6 +37,7 @@ const RAW_RUNTIME_STATE =
           ["eslint-plugin-react", "virtual:35930d4f0d59d9b77298bd87b8e1542b9738ab9422e38bb973e6f3e67a02cc08dfdd1fc7281b3c0c1b40c6f3ae4662563b52e5c2f2b8711d280e16765cd214f9#npm:7.34.3"],\
           ["eslint-plugin-react-hooks", "virtual:35930d4f0d59d9b77298bd87b8e1542b9738ab9422e38bb973e6f3e67a02cc08dfdd1fc7281b3c0c1b40c6f3ae4662563b52e5c2f2b8711d280e16765cd214f9#npm:4.6.2"],\
           ["eslint-plugin-react-refresh", "virtual:35930d4f0d59d9b77298bd87b8e1542b9738ab9422e38bb973e6f3e67a02cc08dfdd1fc7281b3c0c1b40c6f3ae4662563b52e5c2f2b8711d280e16765cd214f9#npm:0.4.7"],\
+          ["lil-gui", "npm:0.19.2"],\
           ["react", "npm:18.3.1"],\
           ["react-dom", "virtual:35930d4f0d59d9b77298bd87b8e1542b9738ab9422e38bb973e6f3e67a02cc08dfdd1fc7281b3c0c1b40c6f3ae4662563b52e5c2f2b8711d280e16765cd214f9#npm:18.3.1"],\
           ["three", "npm:0.165.0"],\
@@ -1046,6 +1048,33 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../../../.yarn/berry/cache/@mui-core-downloads-tracker-npm-5.15.20-235882c21f-10c0.zip/node_modules/@mui/core-downloads-tracker/",\
         "packageDependencies": [\
           ["@mui/core-downloads-tracker", "npm:5.15.20"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@mui/icons-material", [\
+      ["npm:5.15.21", {\
+        "packageLocation": "../../../.yarn/berry/cache/@mui-icons-material-npm-5.15.21-e460f90f91-10c0.zip/node_modules/@mui/icons-material/",\
+        "packageDependencies": [\
+          ["@mui/icons-material", "npm:5.15.21"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:35930d4f0d59d9b77298bd87b8e1542b9738ab9422e38bb973e6f3e67a02cc08dfdd1fc7281b3c0c1b40c6f3ae4662563b52e5c2f2b8711d280e16765cd214f9#npm:5.15.21", {\
+        "packageLocation": "./.yarn/__virtual__/@mui-icons-material-virtual-3b78daa184/4/.yarn/berry/cache/@mui-icons-material-npm-5.15.21-e460f90f91-10c0.zip/node_modules/@mui/icons-material/",\
+        "packageDependencies": [\
+          ["@mui/icons-material", "virtual:35930d4f0d59d9b77298bd87b8e1542b9738ab9422e38bb973e6f3e67a02cc08dfdd1fc7281b3c0c1b40c6f3ae4662563b52e5c2f2b8711d280e16765cd214f9#npm:5.15.21"],\
+          ["@babel/runtime", "npm:7.24.7"],\
+          ["@mui/material", "virtual:35930d4f0d59d9b77298bd87b8e1542b9738ab9422e38bb973e6f3e67a02cc08dfdd1fc7281b3c0c1b40c6f3ae4662563b52e5c2f2b8711d280e16765cd214f9#npm:5.15.20"],\
+          ["@types/mui__material", null],\
+          ["@types/react", "npm:18.3.3"],\
+          ["react", "npm:18.3.1"]\
+        ],\
+        "packagePeers": [\
+          "@mui/material",\
+          "@types/mui__material",\
+          "@types/react",\
+          "react"\
         ],\
         "linkType": "HARD"\
       }]\
@@ -3640,6 +3669,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["lil-gui", [\
+      ["npm:0.19.2", {\
+        "packageLocation": "../../../.yarn/berry/cache/lil-gui-npm-0.19.2-dcaad7ef06-10c0.zip/node_modules/lil-gui/",\
+        "packageDependencies": [\
+          ["lil-gui", "npm:0.19.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["lines-and-columns", [\
       ["npm:1.2.4", {\
         "packageLocation": "../../../.yarn/berry/cache/lines-and-columns-npm-1.2.4-d6c7cc5799-10c0.zip/node_modules/lines-and-columns/",\
@@ -4837,6 +4875,7 @@ const RAW_RUNTIME_STATE =
           ["three-js-app", "workspace:."],\
           ["@emotion/react", "virtual:35930d4f0d59d9b77298bd87b8e1542b9738ab9422e38bb973e6f3e67a02cc08dfdd1fc7281b3c0c1b40c6f3ae4662563b52e5c2f2b8711d280e16765cd214f9#npm:11.11.4"],\
           ["@emotion/styled", "virtual:35930d4f0d59d9b77298bd87b8e1542b9738ab9422e38bb973e6f3e67a02cc08dfdd1fc7281b3c0c1b40c6f3ae4662563b52e5c2f2b8711d280e16765cd214f9#npm:11.11.5"],\
+          ["@mui/icons-material", "virtual:35930d4f0d59d9b77298bd87b8e1542b9738ab9422e38bb973e6f3e67a02cc08dfdd1fc7281b3c0c1b40c6f3ae4662563b52e5c2f2b8711d280e16765cd214f9#npm:5.15.21"],\
           ["@mui/material", "virtual:35930d4f0d59d9b77298bd87b8e1542b9738ab9422e38bb973e6f3e67a02cc08dfdd1fc7281b3c0c1b40c6f3ae4662563b52e5c2f2b8711d280e16765cd214f9#npm:5.15.20"],\
           ["@types/react", "npm:18.3.3"],\
           ["@types/react-dom", "npm:18.3.0"],\
@@ -4845,6 +4884,7 @@ const RAW_RUNTIME_STATE =
           ["eslint-plugin-react", "virtual:35930d4f0d59d9b77298bd87b8e1542b9738ab9422e38bb973e6f3e67a02cc08dfdd1fc7281b3c0c1b40c6f3ae4662563b52e5c2f2b8711d280e16765cd214f9#npm:7.34.3"],\
           ["eslint-plugin-react-hooks", "virtual:35930d4f0d59d9b77298bd87b8e1542b9738ab9422e38bb973e6f3e67a02cc08dfdd1fc7281b3c0c1b40c6f3ae4662563b52e5c2f2b8711d280e16765cd214f9#npm:4.6.2"],\
           ["eslint-plugin-react-refresh", "virtual:35930d4f0d59d9b77298bd87b8e1542b9738ab9422e38bb973e6f3e67a02cc08dfdd1fc7281b3c0c1b40c6f3ae4662563b52e5c2f2b8711d280e16765cd214f9#npm:0.4.7"],\
+          ["lil-gui", "npm:0.19.2"],\
           ["react", "npm:18.3.1"],\
           ["react-dom", "virtual:35930d4f0d59d9b77298bd87b8e1542b9738ab9422e38bb973e6f3e67a02cc08dfdd1fc7281b3c0c1b40c6f3ae4662563b52e5c2f2b8711d280e16765cd214f9#npm:18.3.1"],\
           ["three", "npm:0.165.0"],\
