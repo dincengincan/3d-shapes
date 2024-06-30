@@ -54,8 +54,7 @@ export const useDebugGui = ({
     [selectedShapeMeshInfo, setShapes]
   );
 
-  // TODO engin: Refactor these functions
-  const setPropertToLocalStorage = useCallback(
+  const setPropertyToLocalStorage = useCallback(
     ({ targetProperty, targetValue }) => {
       setShapes((prevState) =>
         prevState.map((object) => {
@@ -148,7 +147,7 @@ export const useDebugGui = ({
       nameFolder
         .add({ name: selectedShapeName }, "name")
         .onFinishChange((value) =>
-          setPropertToLocalStorage({
+          setPropertyToLocalStorage({
             targetProperty: "name",
             targetValue: value,
           })
@@ -157,7 +156,7 @@ export const useDebugGui = ({
       materialFolder
         .add(selectedShapeMeshInfo.material, "wireframe")
         .onFinishChange((value) => {
-          setPropertToLocalStorage({
+          setPropertyToLocalStorage({
             targetProperty: "wireframe",
             targetValue: value,
           });
@@ -169,7 +168,8 @@ export const useDebugGui = ({
     selectedShapeMeshInfo,
     setScalesToLocalStorage,
     setPositionsToLocalStorage,
-    setPropertToLocalStorage,
+    setPropertyToLocalStorage,
+    selectedShapeName,
   ]);
 
   return { handleRemoveGui };

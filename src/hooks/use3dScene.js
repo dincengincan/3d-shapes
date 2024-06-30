@@ -83,7 +83,8 @@ export const use3dScene = () => {
             material.roughness = 0.4;
 
             const mesh = new THREE.Mesh(geometry, material);
-            mesh.position.x = shape.position.x;
+            mesh.position.x =
+              shape.position.x === undefined ? index * 3 : shape.position.x;
             mesh.position.y = shape.position.y;
             mesh.position.z = shape.position.z;
 
@@ -111,8 +112,8 @@ export const use3dScene = () => {
         const addLights = () => {
           const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 
-          const directionalLight = new THREE.DirectionalLight(0x00fffc, 1.2);
-          directionalLight.position.set(5, 5, 0);
+          const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
+          directionalLight.position.set(0, 0, 15);
 
           const hemisphereLight = new THREE.HemisphereLight(
             0xff0000,

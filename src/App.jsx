@@ -10,7 +10,6 @@ import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 
 function App() {
   const canvasRef = useRef(null);
-
   const [shapes = [], setShapes] = useLocalStorage("shapes", []);
 
   const [displayedShapes, setDisplayedShapes] = useState([]);
@@ -21,12 +20,12 @@ function App() {
     (shape) => shape.nameId === selectedShapeMeshInfo?.name
   );
 
+  const renderScene = use3dScene();
   const { handleRemoveGui } = useDebugGui({
     selectedShapeName: selectedDisplayedShape?.name,
     setShapes,
     selectedShapeMeshInfo,
   });
-  const renderScene = use3dScene();
 
   useEffect(() => {
     const cleanup = renderScene({
@@ -50,6 +49,7 @@ function App() {
     const selectedShape = shapes.filter((item) => item.nameId === id);
     setDisplayedShapes(selectedShape);
   };
+
   const handleCreate = ({ name, shapeType }) => {
     const nameId = shapes?.length ? shapes[shapes.length - 1].nameId + 1 : 1;
 
@@ -59,9 +59,8 @@ function App() {
         nameId,
         name,
         shapeType,
-        color: 0xffffff,
         wireframe: false,
-        position: { x: 0, y: 0, z: 0 },
+        position: { x: undefined, y: 0, z: 0 },
         scale: { x: 1, y: 1, z: 1 },
       },
     ]);
@@ -113,7 +112,12 @@ function App() {
       >
         Create
       </Button>
-      <Button variant="contained" color="secondary" onClick={handleRenderAll}>
+      <Button
+        disabled={shapes.length === 0}
+        variant="contained"
+        color="secondary"
+        onClick={handleRenderAll}
+      >
         Render
       </Button>
       <ShapeTable
