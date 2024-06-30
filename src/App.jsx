@@ -15,24 +15,32 @@ function App() {
 
   const [displayedShapes, setDisplayedShapes] = useState([]);
   const [showDialog, setShowDialog] = useState(false);
-  const [selectedObject, setSelectedObject] = useState(null);
+  const [selectedShapeMeshInfo, setSelectedShapeMeshInfo] = useState(null);
 
-  const { handleRemoveGui } = useDebugGui({ selectedObject, setShapes });
+  const selectedDisplayedShape = displayedShapes?.find(
+    (shape) => shape.nameId === selectedShapeMeshInfo?.name
+  );
+
+  const { handleRemoveGui } = useDebugGui({
+    selectedShapeName: selectedDisplayedShape?.name,
+    setShapes,
+    selectedShapeMeshInfo,
+  });
   const renderScene = use3dScene();
 
   useEffect(() => {
     const cleanup = renderScene({
       canvas: canvasRef.current,
       displayedShapes,
-      onShapeSelect: setSelectedObject,
+      onShapeSelect: setSelectedShapeMeshInfo,
       onShapeDeselect: () => {
-        setSelectedObject(null);
+        setSelectedShapeMeshInfo(null);
         handleRemoveGui();
       },
     });
 
     return cleanup;
-  }, [renderScene, displayedShapes, setSelectedObject, handleRemoveGui]);
+  }, [renderScene, displayedShapes, setSelectedShapeMeshInfo, handleRemoveGui]);
 
   const handleShapeDelete = (id) => {
     setShapes((prevState) => prevState.filter((item) => item.nameId !== id));

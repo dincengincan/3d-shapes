@@ -1,7 +1,11 @@
 import GUI from "lil-gui";
 import { useRef, useEffect, useCallback } from "react";
 
-export const useDebugGui = ({ selectedObject, setShapes }) => {
+export const useDebugGui = ({
+  selectedShapeMeshInfo,
+  setShapes,
+  selectedShapeName,
+}) => {
   const guiRef = useRef(null);
 
   const handleRemoveGui = useCallback(() => {
@@ -14,7 +18,7 @@ export const useDebugGui = ({ selectedObject, setShapes }) => {
     ({ targetProperty, targetValue }) => {
       setShapes((prevState) =>
         prevState.map((object) => {
-          if (object.nameId === selectedObject.name) {
+          if (object.nameId === selectedShapeMeshInfo.name) {
             return {
               ...object,
               position: {
@@ -27,14 +31,14 @@ export const useDebugGui = ({ selectedObject, setShapes }) => {
         })
       );
     },
-    [selectedObject, setShapes]
+    [selectedShapeMeshInfo, setShapes]
   );
 
   const setScalesToLocalStorage = useCallback(
     ({ targetProperty, targetValue }) => {
       setShapes((prevState) =>
         prevState.map((object) => {
-          if (object.nameId === selectedObject.name) {
+          if (object.nameId === selectedShapeMeshInfo.name) {
             return {
               ...object,
               scale: {
@@ -47,14 +51,15 @@ export const useDebugGui = ({ selectedObject, setShapes }) => {
         })
       );
     },
-    [selectedObject, setShapes]
+    [selectedShapeMeshInfo, setShapes]
   );
 
+  // TODO engin: Refactor these functions
   const setPropertToLocalStorage = useCallback(
     ({ targetProperty, targetValue }) => {
       setShapes((prevState) =>
         prevState.map((object) => {
-          if (object.nameId === selectedObject.name) {
+          if (object.nameId === selectedShapeMeshInfo.name) {
             return {
               ...object,
               [targetProperty]: targetValue,
@@ -64,25 +69,26 @@ export const useDebugGui = ({ selectedObject, setShapes }) => {
         })
       );
     },
-    [selectedObject, setShapes]
+    [selectedShapeMeshInfo, setShapes]
   );
 
   useEffect(() => {
-    if (selectedObject) {
+    if (selectedShapeMeshInfo) {
       if (guiRef.current) {
         guiRef.current.destroy();
       }
 
-      const gui = new GUI();
+      const gui = new GUI({ title: "Control Panel" });
       gui.domElement.style.position = "absolute";
       gui.domElement.style.left = "0px";
 
+      const nameFolder = gui.addFolder("Info");
       const positionFolder = gui.addFolder("Position");
       const scaleFolder = gui.addFolder("Scale");
       const materialFolder = gui.addFolder("Material");
 
       positionFolder
-        .add(selectedObject.position, "x")
+        .add(selectedShapeMeshInfo.position, "x")
         .min(-10)
         .max(10)
         .step(0.1)
@@ -93,7 +99,7 @@ export const useDebugGui = ({ selectedObject, setShapes }) => {
           })
         );
       positionFolder
-        .add(selectedObject.position, "y")
+        .add(selectedShapeMeshInfo.position, "y")
         .min(-10)
         .max(10)
         .step(0.1)
@@ -104,7 +110,7 @@ export const useDebugGui = ({ selectedObject, setShapes }) => {
           })
         );
       positionFolder
-        .add(selectedObject.position, "z")
+        .add(selectedShapeMeshInfo.position, "z")
         .min(-10)
         .max(10)
         .step(0.1)
@@ -115,7 +121,7 @@ export const useDebugGui = ({ selectedObject, setShapes }) => {
           })
         );
       scaleFolder
-        .add(selectedObject.scale, "x")
+        .add(selectedShapeMeshInfo.scale, "x")
         .min(-10)
         .max(10)
         .step(0.1)
@@ -123,7 +129,7 @@ export const useDebugGui = ({ selectedObject, setShapes }) => {
           setScalesToLocalStorage({ targetProperty: "x", targetValue: value })
         );
       scaleFolder
-        .add(selectedObject.scale, "y")
+        .add(selectedShapeMeshInfo.scale, "y")
         .min(-10)
         .max(10)
         .step(0.1)
@@ -131,7 +137,7 @@ export const useDebugGui = ({ selectedObject, setShapes }) => {
           setScalesToLocalStorage({ targetProperty: "y", targetValue: value })
         );
       scaleFolder
-        .add(selectedObject.scale, "z")
+        .add(selectedShapeMeshInfo.scale, "z")
         .min(-10)
         .max(10)
         .step(0.1)
@@ -139,8 +145,17 @@ export const useDebugGui = ({ selectedObject, setShapes }) => {
           setScalesToLocalStorage({ targetProperty: "z", targetValue: value })
         );
 
+      nameFolder
+        .add({ name: selectedShapeName }, "name")
+        .onFinishChange((value) =>
+          setPropertToLocalStorage({
+            targetProperty: "name",
+            targetValue: value,
+          })
+        );
+
       materialFolder
-        .add(selectedObject.material, "wireframe")
+        .add(selectedShapeMeshInfo.material, "wireframe")
         .onFinishChange((value) => {
           setPropertToLocalStorage({
             targetProperty: "wireframe",
@@ -151,7 +166,7 @@ export const useDebugGui = ({ selectedObject, setShapes }) => {
       guiRef.current = gui;
     }
   }, [
-    selectedObject,
+    selectedShapeMeshInfo,
     setScalesToLocalStorage,
     setPositionsToLocalStorage,
     setPropertToLocalStorage,
