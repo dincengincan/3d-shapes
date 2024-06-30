@@ -26,20 +26,21 @@ export function CreateShapeDialog({ open, onClose, onCreate }) {
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Create Shape</DialogTitle>
-      <DialogContent>
-        <DialogContentText>
+      <DialogContent sx={{ width: "400px" }}>
+        <DialogContentText sx={{ marginBottom: 2 }}>
           Please enter the details for the new shape.
         </DialogContentText>
         <TextField
+          sx={{ marginBottom: 1 }}
           required
           autoFocus
-          margin="dense"
           label="Name"
           fullWidth
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
         <TextField
+          sx={{ marginBottom: 1 }}
           select
           required
           margin="dense"
@@ -55,14 +56,14 @@ export function CreateShapeDialog({ open, onClose, onCreate }) {
           ))}
         </TextField>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="secondary">
+      <DialogActions sx={{ paddingX: 3, paddingY: 2 }}>
+        <Button variant="outlined" onClick={onClose}>
           Cancel
         </Button>
         <Button
+          variant="contained"
           disabled={!shapeType || !name}
           onClick={handleCreate}
-          color="primary"
         >
           Create
         </Button>

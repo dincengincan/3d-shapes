@@ -12,6 +12,7 @@ import {
 export const ShapeTable = ({ data, onShapeDelete, onShapeRender }) => {
   return (
     <TableContainer
+      variant="outlined"
       component={Paper}
       style={{ marginTop: "20px", minWidth: "500px" }}
     >
@@ -21,7 +22,7 @@ export const ShapeTable = ({ data, onShapeDelete, onShapeRender }) => {
             <TableCell>ID</TableCell>
             <TableCell>Name</TableCell>
             <TableCell>Shape Type</TableCell>
-            <TableCell>Action</TableCell>
+            <TableCell align="right">Action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -31,7 +32,7 @@ export const ShapeTable = ({ data, onShapeDelete, onShapeRender }) => {
                 <TableCell>{row.nameId}</TableCell>
                 <TableCell>{row.name}</TableCell>
                 <TableCell>{row.shapeType}</TableCell>
-                <TableCell>
+                <TableCell align="right">
                   <Button
                     variant="contained"
                     color="error"

@@ -1,12 +1,13 @@
 import { ShapeTable } from "./components/ShapeTable";
 import { CreateShapeDialog } from "./components/CreateShapeDialog";
-import { Button } from "@mui/material";
+import { Button, Paper, Typography } from "@mui/material";
 import { useState, useRef, useEffect } from "react";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { use3dScene } from "./hooks/use3dScene";
 import { useDebugGui } from "./hooks/useDebugGui";
 import { IconButton } from "@mui/material";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
+import "./App.css";
 
 function App() {
   const canvasRef = useRef(null);
@@ -103,35 +104,43 @@ function App() {
   }
 
   return (
-    <>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setShowDialog(true)}
-        sx={{ marginRight: "10px" }}
-      >
-        Create
-      </Button>
-      <Button
-        disabled={shapes.length === 0}
-        variant="contained"
-        color="secondary"
-        onClick={handleRenderAll}
-      >
-        Render
-      </Button>
-      <ShapeTable
-        data={shapes}
-        onShapeDelete={handleShapeDelete}
-        onShapeRender={handleShapeRender}
-      />
+    <div className="app-container">
+      <Paper className="paper-container" elevation={2}>
+        <div className="header-container">
+          <Typography variant="h5">Shapes</Typography>
+          <div>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setShowDialog(true)}
+              sx={{ marginRight: "10px" }}
+            >
+              Create
+            </Button>
+            <Button
+              disabled={shapes.length === 0}
+              color="primary"
+              onClick={handleRenderAll}
+              variant="outlined"
+            >
+              Render all
+            </Button>
+          </div>
+        </div>
 
-      <CreateShapeDialog
-        open={showDialog}
-        onClose={() => setShowDialog(false)}
-        onCreate={handleCreate}
-      />
-    </>
+        <ShapeTable
+          data={shapes}
+          onShapeDelete={handleShapeDelete}
+          onShapeRender={handleShapeRender}
+        />
+
+        <CreateShapeDialog
+          open={showDialog}
+          onClose={() => setShowDialog(false)}
+          onCreate={handleCreate}
+        />
+      </Paper>
+    </div>
   );
 }
 
