@@ -4,7 +4,7 @@ This project is a 3D visualization tool using Vite, Three.js, and React. It allo
 
 ## Demo
 
-Check out the [demo link](https://dincengincan.github.io/3d-shapes/) to see the app in action.
+Check out the [demo link](https://3d-shapes-three.vercel.app/) to see the app in action.
 
 ## Features
 
