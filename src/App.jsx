@@ -71,6 +71,12 @@ function App() {
     setDisplayedShapes(shapes);
   };
 
+  const handleCloseButtonClick = () => {
+    setDisplayedShapes([]);
+    setSelectedShapeMeshInfo(null);
+    handleRemoveGui();
+  };
+
   if (displayedShapes.length > 0) {
     return (
       <div
@@ -88,10 +94,7 @@ function App() {
             zIndex: 1,
           }}
           color="primary"
-          onClick={() => {
-            setDisplayedShapes([]);
-            handleRemoveGui();
-          }}
+          onClick={handleCloseButtonClick}
         >
           <CancelRoundedIcon />
         </IconButton>
